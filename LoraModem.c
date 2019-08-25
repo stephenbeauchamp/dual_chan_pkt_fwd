@@ -983,6 +983,11 @@ void SolveHostname(const char* p_hostname, uint16_t port, struct sockaddr_in* p_
 }
 
 
+
+void write_datafile( char *msg, int length ) {
+
+}
+
 void SendUdp(char *msg, int length) {
   /*
   // WE DON'T WANT TO SEND UDP WE JUST WANT TO CREATE A FILE,

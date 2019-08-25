@@ -1,0 +1,19 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": true,
+  "useAtomicWrites": true,
+  "deleteLocal": false,
+  "hostname": "192.168.192.17",
+  "port": "22",
+  "target": "/source-code/github.com_stephenbeauchamp/dual_chan_pkt_fwd/",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "pi",
+  "password": "password",
+  "watch": [],
+  "transport": "scp"
+}

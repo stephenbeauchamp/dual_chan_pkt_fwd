@@ -50,7 +50,7 @@
 #include <pthread.h>
 #include <netdb.h>              // gai_strerror
 
-#define _STRICT_1CH 0 
+#define _STRICT_1CH 0
 #define TX_BUFF_SIZE    2048
 #define BASE64_MAX_LENGTH 341
 #define DEFAULT_KEEPALIVE   5
@@ -59,8 +59,7 @@
 extern uint16_t bw ;
 extern int debug;
 
-typedef enum SpreadingFactors
-{
+typedef enum SpreadingFactors {
     SF7 = 7,
     SF8,
     SF9,
@@ -69,8 +68,7 @@ typedef enum SpreadingFactors
     SF12
 } SpreadingFactor_t;
 
-typedef struct Server
-{
+typedef struct Server {
     std::string address;
     uint16_t port;
     bool enabled;
@@ -95,12 +93,10 @@ extern uint32_t cp_up_pkt_fwd;
 
 extern uint32_t cp_nb_pull;
 
-
-
 // Our code should correct the server timing
 extern long txDelay;								// extra delay time on top of server TMST
 
-// Frequencies 
+// Frequencies
 extern uint32_t  freq;
 extern uint32_t  freq_2;
 
@@ -108,7 +104,7 @@ typedef unsigned char byte;
 
 // ============================================================================
 // Set all definitions for Gateway
-// ============================================================================	
+// ============================================================================
 
 #define REG_FIFO                    0x00
 #define REG_OPMODE                  0x01
@@ -123,33 +119,31 @@ typedef unsigned char byte;
 #define REG_IRQ_FLAGS_MASK          0x11
 #define REG_IRQ_FLAGS               0x12
 #define REG_RX_NB_BYTES             0x13
-#define REG_PKT_SNR_VALUE			0x19
-#define REG_PKT_RSSI				0x1A
+#define REG_PKT_SNR_VALUE           0x19
+#define REG_PKT_RSSI                0x1A
 #define REG_MODEM_CONFIG1           0x1D
 #define REG_MODEM_CONFIG2           0x1E
-#define REG_SYMB_TIMEOUT_LSB  		0x1F
+#define REG_SYMB_TIMEOUT_LSB    		0x1F
 
 #define REG_PAYLOAD_LENGTH          0x22
-#define REG_MAX_PAYLOAD_LENGTH 		0x23
+#define REG_MAX_PAYLOAD_LENGTH  		0x23
 #define REG_HOP_PERIOD              0x24
 #define REG_MODEM_CONFIG3           0x26
 
-#define REG_INVERTIQ				0x33
-#define REG_DET_TRESH				0x37				// SF6
-#define REG_SYNC_WORD				0x39
+#define REG_INVERTIQ			        	0x33
+#define REG_DET_TRESH               0x37				// SF6
+#define REG_SYNC_WORD               0x39
 
 #define REG_DIO_MAPPING_1           0x40
 #define REG_DIO_MAPPING_2           0x41
-#define REG_VERSION	  				0x42
+#define REG_VERSION	                0x42
 
-#define REG_PADAC					0x5A
-#define REG_PADAC_SX1272			0x5A
-#define REG_PADAC_SX1276			0x4D
-
+#define REG_PADAC                   0x5A
+#define REG_PADAC_SX1272            0x5A
+#define REG_PADAC_SX1276            0x4D
 // ----------------------------------------
 // Used by REG_PAYLOAD_LENGTH to set receive patyload lenth
 #define PAYLOAD_LENGTH              0x40
-
 // ----------------------------------------
 // opModes
 #define SX72_MODE_SLEEP             0x80
@@ -157,7 +151,6 @@ typedef unsigned char byte;
 #define SX72_MODE_FSTX              0x82
 #define SX72_MODE_TX                0x83	// 0x80 | 0x03
 #define SX72_MODE_RX_CONTINUOS      0x85
-
 // ----------------------------------------
 // LMIC Constants for radio registers
 #define OPMODE_LORA      			0x80
@@ -286,4 +279,3 @@ static const int SPI_CHANNEL_2 = 1;
 
 extern bool sx1272;
 typedef unsigned char byte;
-

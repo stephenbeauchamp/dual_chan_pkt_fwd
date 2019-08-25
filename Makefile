@@ -1,17 +1,20 @@
 # dual_chan_pkt_fwd
 # Dual Channel LoRaWAN Gateway
 
+# PRE-REQUISITE!
+# sudo apt-get install wiringpi 
+
 CC = g++
 CFLAGS = -std=c++11 -c -Wall -I include/
-LIBS = -lwiringPi -lpthread 
+LIBS = -lwiringPi -lpthread
 
 all: dual_chan_pkt_fwd
 
 dual_chan_pkt_fwd: base64.o parson.o LoraModem.o dual_chan_pkt_fwd.o
 	$(CC) dual_chan_pkt_fwd.o parson.o base64.o LoraModem.o $(LIBS) -o dual_chan_pkt_fwd
 
-dual_chan_pkt_fwd.o: dual_chan_pkt_fwd.cpp 
-	$(CC) $(CFLAGS) dual_chan_pkt_fwd.cpp 
+dual_chan_pkt_fwd.o: dual_chan_pkt_fwd.cpp
+	$(CC) $(CFLAGS) dual_chan_pkt_fwd.cpp
 
 base64.o: base64.c
 	$(CC) $(CFLAGS) base64.c
@@ -35,4 +38,4 @@ install:
 uninstall:
 	sudo systemctl stop dual_chan_pkt_fwd
 	sudo systemctl disable dual_chan_pkt_fwd.service
-	sudo rm -f /lib/systemd/system/dual_chan_pkt_fwd.service 
+	sudo rm -f /lib/systemd/system/dual_chan_pkt_fwd.service

@@ -21,6 +21,7 @@
 //
 
 #include "LoraModem.h"
+#include <stdio.h>
 
 uint16_t bw = 125;
 int debug = 1;
@@ -982,13 +983,47 @@ void SolveHostname(const char* p_hostname, uint16_t port, struct sockaddr_in* p_
   freeaddrinfo(p_result);
 }
 
-
-
-void write_datafile( char *msg, int length ) {
-
+void tk_random_lower_alpha( char *s, const int len ) {
+  static const char rand_chars[] = "abcdefghijklmnopqrstuvwxyz";
+  for ( int i=0; i<len; i++ ) {
+    s[i] = rand_chars[ rand()%(sizeof(rand_chars)-1) ];
+  }
+  s[len] = 0;
 }
 
-void SendUdp(char *msg, int length) {
+void write_datafile( const char *text_data, int length ) {
+  // GET FILE TIMESTAMP
+  time_t time_now = time( NULL );
+  struct tm *timeinfo_now = localtime( &time_now );
+  char timestamp[21];
+  strftime( timestamp, sizeof(timestamp), "%Y%m%d.%H%M%S", timeinfo_now );
+  //
+  char data_file_folder[] = "/tmp";
+  //
+  char random[17];
+  tk_random_lower_alpha( random, 16 );
+
+  char data_file_path[512];
+  strcpy( data_file_path, data_file_folder );
+  strcat( data_file_path, "/datafile." );
+  strcat( data_file_path, timestamp );
+  strcat( data_file_path, "." );
+  strcat( data_file_path, random );
+  strcat( data_file_path, ".json" );
+  //
+  printf( "INFO: saving text to file %s\n", text_data );
+  printf( "INFO: writing to file %s...\n", data_file_path );
+  FILE *wtr;
+  wtr = fopen( data_file_path, "w" );
+  if( wtr == NULL ) {
+    printf("ERROR: cannot open file for writing ...");
+    exit(1);
+  }
+  fputs( text_data, wtr );
+  fclose( wtr );
+}
+
+//void SendUdp(char *msg, int length) {
   /*
   // WE DON'T WANT TO SEND UDP WE JUST WANT TO CREATE A FILE,
   for (std::vector<Server_t>::iterator it = servers.begin(); it != servers.end(); ++it) {
@@ -1009,7 +1044,7 @@ void SendUdp(char *msg, int length) {
     }
   }
   */
-}
+//}
 
 // ----------------------------------------------------------------------------
 // Receive a LoRa package over the air
@@ -1049,43 +1084,10 @@ bool ReceivePacket(byte CE) {
         SNR = ( value & 0xFF ) >> 2;
       }
       rssicorr = sx1272 ? 139 : 157;
-      printf("CE%i Packet RSSI: %d, ", CE, ReadRegister(0x1A, CE) - rssicorr);
+      printf("INFO: CE%i Packet RSSI: %d, ", CE, ReadRegister(0x1A, CE) - rssicorr);
       printf("RSSI: %d, ", ReadRegister(0x1B,CE) - rssicorr);
       printf("SNR: %li, ", SNR);
-      printf("Length: %hhu Message:", length);
-      //for (int i=0; i<length; i++) {
-       // char c = (char) message[i];
-        //printf("%i.",c);
-      //}
-      //printf("\n");
-      char buff_up[TX_BUFF_SIZE]; /* buffer to compose the upstream packet */
-      int buff_index = 0;
-      /* gateway <-> MAC protocol variables */
-      //static uint32_t net_mac_h; /* Most Significant Nibble, network order */
-      //static uint32_t net_mac_l; /* Least Significant Nibble, network order */
-      /* pre-fill the data buffer with fixed fields */
-      buff_up[0] = PROTOCOL_VERSION;
-      buff_up[3] = PKT_PUSH_DATA;
-      /* process some of the configuration variables */
-      //net_mac_h = htonl((uint32_t)(0xFFFFFFFF & (lgwm>>32)));
-      //net_mac_l = htonl((uint32_t)(0xFFFFFFFF &  lgwm  ));
-      //*(uint32_t *)(buff_up + 4) = net_mac_h;
-      //*(uint32_t *)(buff_up + 8) = net_mac_l;
-      buff_up[4] = (uint8_t)ifr.ifr_hwaddr.sa_data[0];
-      buff_up[5] = (uint8_t)ifr.ifr_hwaddr.sa_data[1];
-      buff_up[6] = (uint8_t)ifr.ifr_hwaddr.sa_data[2];
-      buff_up[7] = 0xFF;
-      buff_up[8] = 0xFF;
-      buff_up[9] = (uint8_t)ifr.ifr_hwaddr.sa_data[3];
-      buff_up[10] = (uint8_t)ifr.ifr_hwaddr.sa_data[4];
-      buff_up[11] = (uint8_t)ifr.ifr_hwaddr.sa_data[5];
-      /* start composing datagram with the header */
-      uint8_t token_h = (uint8_t)rand(); /* random token */
-      uint8_t token_l = (uint8_t)rand(); /* random token */
-      buff_up[1] = token_h;
-      buff_up[2] = token_l;
-      buff_index = 12; /* 12-byte header */
-      // TODO: tmst can jump is time is (re)set, not good.
+      printf("Length: %hhu\n", length);
       struct timeval now;
       gettimeofday(&now, NULL);
       uint32_t tmst = (uint32_t)(now.tv_sec * 1000000 + now.tv_usec);
@@ -1134,12 +1136,8 @@ bool ReceivePacket(byte CE) {
       writer.EndObject();
       writer.EndArray();
       writer.EndObject();
-      std::string json = sb.GetString();
-      printf("rxpk update: %s\n", json.c_str());
-      // Build and send message.
-      memcpy(buff_up + 12, json.c_str(), json.size());
-      // SendUdp(buff_up, buff_index + json.size());
-      printf("DEBUG: CREATE FILE NOW...\n");
+      const char *text_data = sb.GetString();
+      write_datafile( text_data, sizeof(text_data) );
       fflush(stdout);
     }
   }

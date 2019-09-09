@@ -998,7 +998,7 @@ void write_datafile( const char *text_data, int length ) {
   char timestamp[21];
   strftime( timestamp, sizeof(timestamp), "%Y%m%d.%H%M%S", timeinfo_now );
   //
-  char data_file_folder[] = "/tmp";
+  char data_file_folder[] = "/opt/sensor-datafile/node-0001/source/";
   //
   char random[17];
   tk_random_lower_alpha( random, 16 );

@@ -1,3 +1,9 @@
+# HANDY stuff
+
+rm -f /tmp/datafile* && rm -f dual_chan_pkt_fwd && rm -f \*.o && make
+make
+
+
 Dual Channel LoRaWAN Gateway (Up and Downlink)
 ==============================
 This repository contains a proof-of-concept implementation of a dual
@@ -15,8 +21,8 @@ Part of the source has been copied from the Semtech Packet Forwarder
 Maintainer: Thomas Telkamp <thomas@telkamp.eu>
 
 Was forked by @jlesech https://github.com/tftelkamp/single_chan_pkt_fwd to add json configuration file    
-then forked by @hallard https://github.com/hallard/single_chan_pkt_fwd 
-then forked by @bokse001 https://github.com/bokse001/dual_chan_pkt_fwd to add dual channel support, 
+then forked by @hallard https://github.com/hallard/single_chan_pkt_fwd
+then forked by @bokse001 https://github.com/bokse001/dual_chan_pkt_fwd to add dual channel support,
     configurable network interface, Downlink and uputronics Raspberry Pi+ LoRa(TM) Expansion Board
 
 It contains code from both the ESP-1ch-Gateway-v3.0 by Maarten Westenberg https://github.com/things4u/ESP-1ch-Gateway-v3.0
@@ -175,8 +181,8 @@ downstream messages (tx)
 Dependencies
 ------------
 
--	SPI needs to be enabled in the Raspberry Pi configuration menu (to start up use CLI command: raspi-config) 
--	Install WiringPi  (GPIO access library – refer to: http://wiringpi.com/ ): sudo apt-get install wiringpi 
+-	SPI needs to be enabled in the Raspberry Pi configuration menu (to start up use CLI command: raspi-config)
+-	Install WiringPi  (GPIO access library – refer to: http://wiringpi.com/ ): sudo apt-get install wiringpi
 -	Run packet forwarder as root (sudo)
 
 
@@ -187,7 +193,7 @@ SX127x	Raspberry PI
 3.3V	 3.3V (header pin #1)
 GND	GND (pin #6)
 MISO	MISO (pin #21)
-MOSI	MOSI (pin #19) 
+MOSI	MOSI (pin #19)
 SCK	CLK (pin #23)
 NSS	GPIO6 (pin #22)
 DIO0	GPIO7 (pin #7)
@@ -210,4 +216,4 @@ The source files in this repository are made available under the Eclipse Public 
 
 base64 implementation, that has been copied from the Semtech Packet Forwarder;
 RapidJSON, licensed under the MIT License.
-parson, copied from http://kgabis.github.com/parson/ 
+parson, copied from http://kgabis.github.com/parson/

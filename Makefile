@@ -2,11 +2,11 @@
 # Dual Channel LoRaWAN Gateway
 
 # PRE-REQUISITE!
-# sudo apt-get install wiringpi 
+# sudo apt-get install wiringpi
 
 CC = g++
-CFLAGS = -std=c++11 -c -Wall -I include/
-LIBS = -lwiringPi -lpthread
+CFLAGS = -std=c++11 -c -Wall -I include/ -I/usr/include/hiredis
+LIBS = -lwiringPi -lpthread  -lhiredis
 
 all: dual_chan_pkt_fwd
 

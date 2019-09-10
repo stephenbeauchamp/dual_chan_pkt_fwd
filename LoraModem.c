@@ -22,6 +22,8 @@
 
 #include "LoraModem.h"
 #include <stdio.h>
+#include <hiredis.h>
+#include <time.h>
 
 uint16_t bw = 125;
 int debug = 1;
@@ -991,6 +993,38 @@ void tk_random_lower_alpha( char *s, const int len ) {
   s[len] = 0;
 }
 
+//
+// <REDIS>
+//
+
+redisContext *redis_conn = NULL;
+
+redisContext *redis_get_conn() {
+  if ( redis_conn ==  NULL ) {
+    char redis_host[128];
+    strcpy( redis_host,  "127.0.0.1");
+    int redis_port = 6379;
+    struct timeval redis_conn_timeout = { 1 , 500000  };
+    redis_conn = redisConnectWithTimeout( redis_host, redis_port, redis_conn_timeout );
+    if ( redis_conn == NULL || redis_conn->err ) {
+      fprintf(stderr, "ERROR: could not open connection with redis [host %s , port %d ]...\n", redis_host, redis_port );
+      exit ( 1 );
+    }
+  }
+  return redis_conn;
+}
+
+void redis_add_to_queue_end( const char *queue, const char *msg ) {
+  redisCommand( redis_get_conn(), "LPUSH %s %s", queue, msg );
+  //freeReplyObject( reply );
+  //usleep( 1 * 1000 ); // NOT SURE IF THIS IS NEEDED?
+}
+
+//
+// </REDIS>
+//
+
+
 void write_datafile( const char *text_data, int length ) {
   // GET FILE TIMESTAMP
   time_t time_now = time( NULL );
@@ -1137,7 +1171,8 @@ bool ReceivePacket(byte CE) {
       writer.EndArray();
       writer.EndObject();
       const char *text_data = sb.GetString();
-      write_datafile( text_data, sizeof(text_data) );
+      //write_datafile( text_data, sizeof(text_data) );
+      redis_add_to_queue_end( "SENSA_DATA_QUEUE", text_data );
       fflush(stdout);
     }
   }
